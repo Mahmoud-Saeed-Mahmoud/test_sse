@@ -1,0 +1,61 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Role {
+  id Int [pk, increment]
+  name String [not null]
+  roleType RoleTypes [not null]
+  permissions Permission [not null]
+  User User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table Permission {
+  id Int [pk, increment]
+  modelName String [not null]
+  allowedOperations Operation[] [not null]
+  rolePermissionsId Int [not null]
+  role Role [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table User {
+  id Int [pk, increment]
+  email String [not null]
+  name String [not null]
+  password String [not null]
+  userRoleId Int [not null]
+  role Role [not null]
+  userStatus String [not null, default: 'Active']
+  roleType RoleTypes
+  phoneNumber String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Enum Operation {
+  list
+  get
+  create
+  update
+  delete
+  search
+  onCreate
+  onUpdate
+  onDelete
+}
+
+Enum RoleTypes {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  AUTHOR
+  READER
+}
+
+Ref: Permission.rolePermissionsId > Role.id
+
+Ref: User.userRoleId > Role.id

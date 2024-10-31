@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "roleType": {
+          "type": "string",
+          "enum": [
+            "SUPER_ADMIN",
+            "ADMIN",
+            "EDITOR",
+            "AUTHOR",
+            "READER"
+          ]
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Permission"
+          }
+        },
+        "User": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Permission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "modelName": {
+          "type": "string"
+        },
+        "allowedOperations": {
+          "type": "array",
+          "enum": [
+            "list",
+            "get",
+            "create",
+            "update",
+            "delete",
+            "search",
+            "onCreate",
+            "onUpdate",
+            "onDelete"
+          ]
+        },
+        "role": {
+          "$ref": "#/definitions/Role"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/Role"
+        },
+        "userStatus": {
+          "type": "string",
+          "default": "Active"
+        },
+        "roleType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "SUPER_ADMIN",
+            "ADMIN",
+            "EDITOR",
+            "AUTHOR",
+            "READER"
+          ]
+        },
+        "phoneNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "role": {
+      "$ref": "#/definitions/Role"
+    },
+    "permission": {
+      "$ref": "#/definitions/Permission"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    }
+  }
+}

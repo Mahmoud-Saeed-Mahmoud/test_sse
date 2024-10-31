@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "./generated/json-schema"
+}
+
+// generator markdown {
+//   provider = "prisma-markdown"
+//   output   = "./generated/ERD.md"
+//   title    = "Prisma ERD"
+// }
+
+// generator fake_data_generator {
+//   provider = "prisma-generator-fake-data"
+//   output   = "./generated/fake-data.ts"
+// }
+
+// generator graphql_crud_gen {
+//   provider = "nestjs-prisma-graphql-crud-gen"
+//   output   = "./generated/graphql-crud"
+// }
+
+// generator nestgraphql {
+//   provider = "node node_modules/prisma-nestjs-graphql"
+//   output   = "./generated/nestgraphql"
+// }
+
+// generator docs {
+//   provider = "node node_modules/prisma-docs-generator"
+//   output   = "./generated/docs"
+// }
+
+// generator dbml {
+//   provider = "prisma-dbml-generator"
+//   output   = "./generated/prisma-client"
+// }
+
+enum Operation {
+  list
+  get
+  create
+  update
+  delete
+  search
+  onCreate
+  onUpdate
+  onDelete
+}
+
+enum RoleTypes {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  AUTHOR
+  READER
+}
+
+model Role {
+  id          Int          @id @default(autoincrement()) @map("_id")
+  name        String
+  roleType    RoleTypes
+  permissions Permission[]
+  User        User[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now())
+}
+
+model Permission {
+  id                Int         @id @default(autoincrement()) @map("_id")
+  modelName         String
+  allowedOperations Operation[]
+  rolePermissionsId Int
+  role              Role        @relation(fields: [rolePermissionsId], references: [id])
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
+}
+
+model User {
+  id          Int        @id @default(autoincrement()) @map("_id")
+  email       String
+  name        String
+  password    String
+  userRoleId  Int
+  role        Role       @relation(fields: [userRoleId], references: [id])
+  userStatus  String     @default("Active")
+  roleType    RoleTypes?
+  phoneNumber String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now())
+}
